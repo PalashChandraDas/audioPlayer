@@ -1,74 +1,78 @@
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:just_audio/just_audio.dart';
 
-class Controls extends StatelessWidget {
-  const Controls({
+class ControlsButton extends StatelessWidget {
+  const ControlsButton({
     super.key,
-    required this.audioPlayer ,
+    required this.audioPlayer,
   });
 
   final AudioPlayer audioPlayer;
 
-
-
   @override
   Widget build(BuildContext context) {
     return
-      // This StreamBuilder rebuilds whenever the player state changes, which
-      // includes the playing/paused state and also the
-      // loading/buffering/ready state. Depending on the state we show the
-      //appropriate button or loading indicator.
-      StreamBuilder<PlayerState>(
+        // This StreamBuilder rebuilds whenever the player state changes, which
+        // includes the playing/paused state and also the
+        // loading/buffering/ready state. Depending on the state we show the
+        //appropriate button or loading indicator.
+        StreamBuilder<PlayerState>(
         stream: audioPlayer.playerStateStream,
         builder: (context, snapshot) {
-          final playerState = snapshot.data;
-          final processingState = playerState?.processingState;
-          final playing = playerState?.playing;
-          if (processingState == ProcessingState.loading ||
-              processingState == ProcessingState.buffering) {
-            return Container(
-              margin: const EdgeInsets.all(8.0),
-              width: 34.0,
-              height: 34.0,
-              child: const CircularProgressIndicator(color: Colors.white),
-            );
-          } else if (playing != true) {
-            return IconButton(
-              icon: const Icon(Icons.play_arrow),
-              iconSize: 34.0,
-              onPressed: audioPlayer.play,
-            );
-          } else if (processingState != ProcessingState.completed) {
-            return IconButton(
-              icon: const Icon(Icons.pause),
-              iconSize: 34.0,
-              onPressed: audioPlayer.pause,
-            );
-          } else {
-            return IconButton(
-              icon: const Icon(Icons.replay),
-              iconSize: 34.0,
-              onPressed: () => audioPlayer.seek(Duration.zero),
-            );
-          }
-        },
-      );
+        final playerState = snapshot.data;
+        final processingState = playerState?.processingState;
+        final playing = playerState?.playing;
+
+        if (processingState == ProcessingState.loading ||
+            processingState == ProcessingState.buffering) {
+            _myConnection(context);
+          return const CircularProgressIndicator(color: Colors.white);
+        } else if (playing != true) {
+          return IconButton(
+            icon: const Icon(Icons.play_arrow, color: Colors.white),
+            iconSize: 34.0,
+            onPressed: audioPlayer.play,
+          );
+        } else if (processingState != ProcessingState.completed) {
+          return IconButton(
+            icon: const Icon(Icons.pause, color: Colors.white),
+            iconSize: 34.0,
+            onPressed: audioPlayer.pause,
+          );
+        } else {
+          return IconButton(
+            icon: const Icon(Icons.replay, color: Colors.white),
+            iconSize: 34.0,
+            onPressed: () => audioPlayer.seek(Duration.zero),
+          );
+        }
+      },
+    );
+  }
+
+ //CUSTOM_METHOD here
+   _myConnection(context) async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.none) {
+      Fluttertoast.showToast(msg: "শ্লোকের উচ্চারণ শুনতে আপনার\nইন্টারনেট কানেকশনটি চালু করুন");
+      audioPlayer.stop();
+      // audioPlayer.play;
+    }
   }
 }
 
 //NEW_CLASS1****************************
 
-class PositionData{
+class PositionData {
   late final Duration position;
   late final Duration bufferedPosition;
   late final Duration duration;
 
   PositionData(this.position, this.bufferedPosition, this.duration);
-
-
 }
-
-
 
 void showSliderDialog({
   required BuildContext context,

@@ -1,6 +1,8 @@
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
@@ -61,8 +63,13 @@ class _MantraScreenState extends State<MantraScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       // appBar: AppBar(),
-      floatingActionButton: FloatingActionButton(onPressed: (){},
-        child: Controls(audioPlayer: _audioPlayer),),
+      floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            setState(() {
+
+            });
+          },
+        child: ControlsButton(audioPlayer: _audioPlayer),),
       body: Container(
         margin: const EdgeInsets.all(10),
         padding: const EdgeInsets.only(top: 30),
@@ -93,7 +100,8 @@ class _MantraScreenState extends State<MantraScreen> {
                 onPressed: () {
                   showSliderDialog(
                     context: context,
-                    title: "Adjust speed",
+                    // title: "Adjust speed",
+                    title: "স্পীড বাড়ান/কমান",
                     divisions: 10,
                     min: 0.5,
                     max: 1.5,
