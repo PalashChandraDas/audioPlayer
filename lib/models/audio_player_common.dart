@@ -29,24 +29,42 @@ class ControlsButton extends StatelessWidget {
         if (processingState == ProcessingState.loading ||
             processingState == ProcessingState.buffering) {
             _myConnection(context);
-          return const CircularProgressIndicator(color: Colors.white);
+          return const CircularProgressIndicator(color: Colors.pink);
         } else if (playing != true) {
-          return IconButton(
-            icon: const Icon(Icons.play_arrow, color: Colors.white),
-            iconSize: 34.0,
-            onPressed: audioPlayer.play,
+          return Ink(
+              decoration: ShapeDecoration(
+                color: Colors.pink.withOpacity(.8),
+                shape: const CircleBorder(),
+              ),
+            child: IconButton(
+              icon: const Icon(Icons.play_arrow, color: Colors.white),
+              iconSize: 32.0,
+              onPressed: audioPlayer.play,
+            ),
           );
         } else if (processingState != ProcessingState.completed) {
-          return IconButton(
-            icon: const Icon(Icons.pause, color: Colors.white),
-            iconSize: 34.0,
-            onPressed: audioPlayer.pause,
+          return Ink(
+            decoration: ShapeDecoration(
+              color: Colors.pink.withOpacity(.8),
+              shape: const CircleBorder(),
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.pause, color: Colors.white),
+              iconSize: 32.0,
+              onPressed: audioPlayer.pause,
+            ),
           );
         } else {
-          return IconButton(
-            icon: const Icon(Icons.replay, color: Colors.white),
-            iconSize: 34.0,
-            onPressed: () => audioPlayer.seek(Duration.zero),
+          return Ink(
+            decoration: ShapeDecoration(
+              color: Colors.pink.withOpacity(.8),
+              shape: const CircleBorder(),
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.replay, color: Colors.white),
+              iconSize: 32.0,
+              onPressed: () => audioPlayer.seek(Duration.zero),
+            ),
           );
         }
       },
@@ -62,7 +80,7 @@ class ControlsButton extends StatelessWidget {
       // audioPlayer.play;
     }
   }
-}
+} //stateless_widget...END
 
 //NEW_CLASS1****************************
 
