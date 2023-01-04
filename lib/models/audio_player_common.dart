@@ -1,16 +1,49 @@
 
+import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:just_audio/just_audio.dart';
 
-class ControlsButton extends StatelessWidget {
+class ControlsButton extends StatefulWidget {
   const ControlsButton({
     super.key,
     required this.audioPlayer,
   });
 
   final AudioPlayer audioPlayer;
+
+
+  @override
+  State<ControlsButton> createState() => _ControlsButtonState();
+}
+
+class _ControlsButtonState extends State<ControlsButton> {
+
+  late StreamSubscription subscription;
+
+  Future _myConnection() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.none) {
+      widget.audioPlayer.stop();
+    }
+  }
+
+
+  @override
+  void initState() {
+   subscription = Connectivity().onConnectivityChanged.listen((event) {
+     _myConnection(); //auto connection_check
+   });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    subscription.cancel();
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +53,7 @@ class ControlsButton extends StatelessWidget {
         // loading/buffering/ready state. Depending on the state we show the
         //appropriate button or loading indicator.
         StreamBuilder<PlayerState>(
-        stream: audioPlayer.playerStateStream,
+        stream: widget.audioPlayer.playerStateStream,
         builder: (context, snapshot) {
         final playerState = snapshot.data;
         final processingState = playerState?.processingState;
@@ -28,9 +61,12 @@ class ControlsButton extends StatelessWidget {
 
         if (processingState == ProcessingState.loading ||
             processingState == ProcessingState.buffering) {
-            _myConnection(context);
+          _myConnection(); //AUTO CONNECTION_CHECK
+
           return const CircularProgressIndicator(color: Colors.pink);
         } else if (playing != true) {
+          _playConnection(); //CONNECTION_CHECK
+
           return Ink(
               decoration: ShapeDecoration(
                 color: Colors.pink.withOpacity(.8),
@@ -39,7 +75,7 @@ class ControlsButton extends StatelessWidget {
             child: IconButton(
               icon: const Icon(Icons.play_arrow, color: Colors.white),
               iconSize: 32.0,
-              onPressed: audioPlayer.play,
+              onPressed: widget.audioPlayer.play,
             ),
           );
         } else if (processingState != ProcessingState.completed) {
@@ -51,7 +87,7 @@ class ControlsButton extends StatelessWidget {
             child: IconButton(
               icon: const Icon(Icons.pause, color: Colors.white),
               iconSize: 32.0,
-              onPressed: audioPlayer.pause,
+              onPressed: widget.audioPlayer.pause,
             ),
           );
         } else {
@@ -63,7 +99,7 @@ class ControlsButton extends StatelessWidget {
             child: IconButton(
               icon: const Icon(Icons.replay, color: Colors.white),
               iconSize: 32.0,
-              onPressed: () => audioPlayer.seek(Duration.zero),
+              onPressed: () => widget.audioPlayer.seek(Duration.zero),
             ),
           );
         }
@@ -72,14 +108,13 @@ class ControlsButton extends StatelessWidget {
   }
 
  //CUSTOM_METHOD here
-   _myConnection(context) async {
+  _playConnection() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.none) {
-      Fluttertoast.showToast(msg: "শ্লোকের উচ্চারণ শুনতে আপনার\nইন্টারনেট কানেকশনটি চালু করুন");
-      audioPlayer.stop();
-      // audioPlayer.play;
+      Fluttertoast.showToast(msg: "উচ্চারণ শুনতে আপনার\nইন্টারনেট কানেকশনটি চালু করুন");
     }
   }
+
 } //stateless_widget...END
 
 //NEW_CLASS1****************************

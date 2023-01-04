@@ -59,11 +59,8 @@ class _MantraScreenState extends State<MantraScreen> {
     );
 
     // _audioPlayer = AudioPlayer()..setAsset("assets/theme_01.mp3");
-    _audioPlayer = AudioPlayer()..setUrl(
-        "https://firebasestorage.googleapis.com/v0"
-            "/b/testingtubeapi.appspot"
-            ".com/o/simpleaudio%2Famoloki_music.mp3?al"
-            "t=media&token=696a7f47-2046-4824-8787-b95e3f1f5279");
+
+    _audioPlayer = AudioPlayer()..setUrl("https://firebasestorage.googleapis.com/v0/b/testpro-c92ce.appspot.com/o/Phir%20Mohabbat.mp3?alt=media&token=b1f41891-524d-48f8-924b-6e68b89ccccd");
     super.initState();
   }
 
@@ -94,6 +91,7 @@ class _MantraScreenState extends State<MantraScreen> {
                   final positionData = snapshot.data;
                   return ProgressBar(
                     barHeight: 50,
+                    timeLabelTextStyle: const TextStyle(color: Colors.black, ),
                     progress: positionData?.position ?? Duration.zero,
                     buffered: positionData?.bufferedPosition ?? Duration.zero,
                     total: positionData?.duration ?? Duration.zero,
@@ -158,7 +156,8 @@ class _MantraScreenState extends State<MantraScreen> {
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
-                          Text(heading, style: const TextStyle(fontSize: 22)),
+                          Text(heading, style: const TextStyle(fontSize: 27,
+                          fontFamily: "BenSen", )),
                           const SizedBox(height: 10),
                           SingleChildScrollView(
                             child: Padding(
@@ -167,7 +166,8 @@ class _MantraScreenState extends State<MantraScreen> {
                                   paragraph,
                                   textAlign: TextAlign.justify,
                                   textDirection: TextDirection.ltr,
-                                  style: const TextStyle(fontSize: 18,
+                                  style: const TextStyle(fontSize: 22,
+                                    fontFamily: "BenSen"
                                      ),)),
                           ),
 
